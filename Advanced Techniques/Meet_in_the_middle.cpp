@@ -13,23 +13,33 @@ using namespace std;
 int X[] = {-1,1,0,0};
 int Y[] = {0,0,1,-1};
 ll arr[50];
-vector<int> vec[2];
-void subset(int i,int n,int sum,int val){
-    if(i>=n)vec[val].push_back(sum);
+vector<ll> vec[2];
+void subset(int i,int n,ll sum,int val){
+    if(i>=n){vec[val].push_back(sum);return ;}
     subset(i + 1, n, sum + arr[i],val);
     subset(i + 1, n, sum,val);
 }
 
 void solve(){
-    int n,x;cin>>x;
+    int n,x;cin>>n>>x;
     for(int i=0;i<n;i++)cin>>arr[i];
     
-    subset(0,n/2 + 1, 0,0);
-    subset(n/2 + 1,n,0,1);
-    int count = 0;
-    for(auto ele1 : vec[0]){
-        for(auto ele2 : vec[1]){
-            if(ele1 + ele2 == x)count++;
+    subset(0,n/2, 0,0);
+    subset(n/2,n,0,1);
+
+
+    unordered_map<ll,ll> um;
+    for(auto ele:vec[1]){
+        
+        um[ele]++;
+    }
+
+    ll count = 0;
+    for(auto ele:vec[0]){
+        if(ele <= x){
+            if(um.find(x - ele) != um.end()){
+                count += um[x - ele];
+            }
         }
     }
     cout<<count<<endl;
